@@ -22,14 +22,14 @@ body{
   width: 75%;
   margin: 15em auto;
   z-index: 0;
-  padding: 2em;
+  padding: 3em;
 }
 
 .resumePic{
   width: 80%;
 }
 
-nav {
+#topBar{
   border: .3em solid #847577;
   text-align: center;
   position: fixed;
@@ -41,12 +41,12 @@ nav h1{
   background-color: #59656F;
   display: block;
   margin: auto;
-  padding: .4em;
+  padding: .6em;
   font-family: verdana;
   color: #DCC9B6;
 }
 
-ul {
+.topUl{
   border-top: .3em solid #847577;
   list-style-type: none;
   margin: auto;
@@ -55,11 +55,11 @@ ul {
   background-color: #DCC9B6;
 }
 
-li {
+.topList {
   display: inline-block;
 }
 
-li a {
+.topList a {
   display: block;
   color: #847577;
   padding: 1em 1.5em;
@@ -68,8 +68,35 @@ li a {
 }
 
 /* Change the link color to #111 (black) on hover */
-li a:hover {
+.topList a:hover {
   background-color: #59656F;
   color: #DCC9B6;
   text-decoration: none;
+}
+
+#contact{
+  list-style-type: none;
+  margin: 1em;
+  padding: 0;
+  width: 5%;
+  height: 20%;
+  bottom: 10em;
+  position: fixed;
+}
+
+#contact li{
+  margin: 1em;
+}
+
+#contact a{
+  position: relative;         /*for transitioning icons up*/
+  top:0;                      /*first position when idle*/
+  transition: all ease 0.5s;  /*tells all new properties to transition with ease over 0.5s*/
+  color: black;
+  text-decoration: none;
+}
+
+#contact a:hover{
+ top: -10px;                  /*because of the transition in #contact a{} these will take over the original properties smoothly*/
+ color: #847577;
 }
