@@ -1,102 +1,35 @@
-#intro{
-  background-color: rgb(131, 146, 159);
-  margin:0;
-  height: 100vh;
-  width: 100%;
-  z-index:999;
-}
-#intro h1{
-  position: relative;
-  top: 50%;
-  padding: 0;
+nav h1 {
+  background-color: #cfd2cd;
+  display: block;
+  padding: 14px 16px;
   margin: 0;
-  font-size: 6em;
-  font-family: courier;
-  font-weight: bold;
-  animation-name: moveUp;
-  animation-duration: 3s;
-  animation-timing-function: ease-in-out;
-  transform: translate(31%, -351%);
-}
-@keyframes moveUp{
-  0%  {transform: translate(31%, -100%); opacity: 0;}
-  75% {transform: translate(31%, -100%); opacity: 1;}
-  100%{transform: translate(31%, -351%);}
-}
-#intro img{
-  position: relative;
-  animation-name: arrowMove;
-  animation-duration: 3s;
-  animation-timing-function: ease-in-out;
-  margin: 0;
-  padding: 0;
-  left: 42%;
-  margin-top: 15%;
-}
-@keyframes arrowMove{
-  0%  {opacity: 0;margin-top: 40%;}
-  75% {opacity: 0;margin-top: 40%;}
-  100%{opacity: 1;margin-top: 15%;}
+  font-family: verdana;
 }
 
-nav{
-  background-color: rgb(200, 200, 200);
-  border-bottom: .2em solid gray;
-  border-top: .2em solid gray;
-  height: 7em;
-  text-align: center;
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #a6a2a2;
 }
-nav a {
-  font-size: 4em;
-  font-weight: bolder;
-  text-align: center;
-  background-color: darkgray;
-  color: black;
-  padding: .1em .5em .2em .5em;
+
+li {
+  float: left;
 }
-nav a:hover{
-  color: darkgray;
+
+li a {
+  display: block;
+  color: #e5e6e4;
+  text-align: center;
+  padding: 14px 16px;
   text-decoration: none;
-  background-color: black;
-  border-color: white;
+  font-family: verdana;
 }
 
-#about{
-  background-color: rgb(143, 58, 28);
-  position: relative;
-  padding-bottom: 4em;
-}
-#about h2{
-  padding: 0;
-  margin:0;
-  padding:2em;
-  color: rgb(230, 230, 230);
-  text-align: center;
-}
-.about-content{
-  border-top: 1em solid lightgray;
-  background-color: rgb(40, 40, 40);
-  width: 40%;
-  margin: 0 auto;
-  padding:2em;
-  color: white;
-  font-family: courier;
-  font-size: 1em;
-}
-.about-content h3{
-  font-weight:bold;
-  font-size: 1em;
-}
-#projects{
-  color: rgb(230 ,230, 230);
-  background-color: rgb(64, 79, 36);
-  margin: 0;
-  padding: 1em;
-  text-align: center;
-}
-
-#resume{
-  width: 100%;
-  height: 100vh;
-  background-color: rgb(143, 58, 28);
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #847577;
+  color: #e5e6e4;
+  text-decoration: none;
 }
