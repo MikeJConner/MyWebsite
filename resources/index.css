@@ -78,7 +78,21 @@ nav h1{
   top: -3px;
 }
 
+#about h1{
+  display: inline-block;
+  font-family: verdana;
+  font-size: 4.75em;
+}
 
+#about img{
+  display: inline-block;
+}
+
+#about p{
+  font-family: verdana;
+  font-size: 1.5em;
+  padding: 1em 4em;
+}
 
 
 
