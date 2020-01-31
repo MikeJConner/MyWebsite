@@ -104,8 +104,49 @@ nav h1{
   padding: 1em 4em;
 }
 
+.gridContainer{
+  padding-top: 2em;
+  display: grid;
+  grid-template-columns: 20% 30% 30%;
+  grid-column-gap: 2%;
+  grid-template-rows: 48% 48%;
+  grid-row-gap: 2%;
+}
 
+.gridItem{
+  background: #C9C5CB;
+  border: .5em solid #847577;
+  border-radius: 3em;
+  padding: 1.5em;
+}
 
+.gridItem img{
+  width:100%;
+}
+
+.gridItem .columnOne{
+  grid-column:1 1;
+}
+
+.gridItem .columnTwo{
+  grid-column:2 2;
+}
+
+.gridIten .columnThree{
+  grid-column:3 3;
+}
+
+.gridItem .rowOne{
+  grid-row: 1 1;
+}
+
+.gridItem .rowTwo{
+  grid-row: 2 2;
+}
+
+#resume{
+  padding-top:5em;
+}
 
 #contact{
   list-style-type: none;
