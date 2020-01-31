@@ -14,31 +14,16 @@ body{
   background-image: url("images/background.png");
 }
 
-#main{
-  background: #e5e6e4;
-  border: .3em solid #DCC9B6;
-  border-radius: 1em;
-  text-align: center;
-  width: 75%;
-  margin: 15em auto;
-  z-index: 0;
-  padding: 3em;
-}
-
-.resumePic{
-  width: 80%;
-}
-
-.resumePic1{
-  margin-top: 3em;
-}
-
 #topBar{
   border: .3em solid #847577;
   text-align: center;
   position: fixed;
   top: 0;
   width: 100%;
+}
+
+nav{
+  z-index: 1;
 }
 
 nav h1{
@@ -48,6 +33,7 @@ nav h1{
   padding: .6em;
   font-family: verdana;
   color: #DCC9B6;
+  z-index:999;
 }
 
 .topUl{
@@ -82,6 +68,17 @@ nav h1{
   top: -3px;
 }
 
+#main{
+  background: #e5e6e4;
+  border: .3em solid #DCC9B6;
+  border-radius: 1em;
+  text-align: center;
+  width: 75%;
+  margin: 15em auto;
+  z-index: 0;
+  padding: 3em;
+}
+
 #about{
   background: #C9C5CB;
   border: .5em solid #847577;
@@ -107,9 +104,8 @@ nav h1{
 .gridContainer{
   padding-top: 2em;
   display: grid;
-  grid-template-columns: 20% 30% 30%;
+  grid-template-columns: 30% 30% 30%;
   grid-column-gap: 2%;
-  grid-template-rows: 48% 48%;
   grid-row-gap: 2%;
 }
 
@@ -118,34 +114,31 @@ nav h1{
   border: .5em solid #847577;
   border-radius: 3em;
   padding: 1.5em;
+
+  position: relative;
+  top:0;
+  transition: all ease 0.5s;
+}
+
+.gridItem:hover{
+  top:-10px;
 }
 
 .gridItem img{
   width:100%;
-}
-
-.gridItem .columnOne{
-  grid-column:1 1;
-}
-
-.gridItem .columnTwo{
-  grid-column:2 2;
-}
-
-.gridIten .columnThree{
-  grid-column:3 3;
-}
-
-.gridItem .rowOne{
-  grid-row: 1 1;
-}
-
-.gridItem .rowTwo{
-  grid-row: 2 2;
+  display: inline;
 }
 
 #resume{
   padding-top:5em;
+}
+
+.resumePic{
+  width: 80%;
+}
+
+.resumePic1{
+  margin-top: 3em;
 }
 
 #contact{
