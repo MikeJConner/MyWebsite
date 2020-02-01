@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="shortcut icon" href="resources/images/favicon.ico" type="image/x-icon">
   <link rel="icon" href="resources/images/favicon.ico" type="image/x-icon">
+  <script src="resources/index.js"></script>
+
 </head>
   <body>
 
@@ -16,7 +18,8 @@
     <nav id="topBar">
       <h1>Michael Conner (website is a work in progress)</h1>
       <ul class="topUl">
-        <li class="topList"><a href="#main">About</a></li>
+        <li class="topList"><a href="#main">About Me</a></li>
+        <li class="topList"><a href="#portfolio">Portfolio</a></li>
         <li class="topList"><a href="#resume">Resume</a></li>
       </ul>
     </nav>
@@ -37,7 +40,6 @@
     </nav>
 
     <section id="main">
-      <h1>This webiste is a work in progress!</h1>
       <div id="about">
         <h1>About Me</h1>
         <p>
@@ -49,7 +51,7 @@
         <h1>Take a look at some of my projects!</h1>
         <div class="gridContainer">
           <div class="gridItem">
-            <img src="resources/images/snake.png"/>
+            <img onmouseover="startSnake()" onmouseout="stopSnake()" src="resources/images/snake.png" id="hoverGif"/>
             <h4>This is a simple game of snake I made in python using pygame! It is the first thing I have made using Pygame.</h2>
             <a href="resources/projectFiles/Snake.py" download="snake.py" target="_blank">
               <h5>Click me to download the .py file for this</h3>
