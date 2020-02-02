@@ -1,263 +1,259 @@
 import math
 import random
 import pygame
-import tkinter as tk
-from tkinter import messagebox
+import tkinter
+import tkinter.font as font
+BOARDSIZE = 700
+ROWS = 20
 
 
+#A class for each individual cube in the snake
 class Cube(object):
-    rows = 20       #set the amount of rows and columns we wish to have in our Snake game
-    w = 500         #set the pixel width and height of our game screen
+    #set rows and columns for game board
+    rows = ROWS
+    #set pixel width and height of game board
+    width = BOARDSIZE         
 
-    def __init__(self, start, dirnx=1, dirny=0, color=(200, 200, 200)):
-        self.pos = start    #start our Snake where we want
-        self.dirnx = 1      #make our Snake start facing right
-        self.dirny = 0
-        self.color = color  #give our Snake a color of our choosing (or the default white set in the function)
+    #start at a set position facing right with a set color
+    def __init__(self, start, xDirec=1, yDirec=0, color=(200, 200, 200)):
+        self.position = start    
+        self.xDirec = 1      
+        self.yDirec = 0
+        self.color = color
 
-    def move(self, dirnx, dirny):
-        self.dirnx = dirnx  #update the direction the Snake is moving
-        self.dirny = dirny
-        self.pos = (self.pos[0] + self.dirnx, self.pos[1] + self.dirny) #move the Snake according to it's direction
+    def move(self, xDirec, yDirec):
+        #update the direction the snake is facing
+        self.xDirec = xDirec  
+        self.yDirec = yDirec
+        #move in accordance to where the snake facing
+        self.position = (self.position[0] + self.xDirec, self.position[1] + self.yDirec) 
 
     def draw(self, surface, eyes=False):
-        dis = self.w // self.rows   #take the width of the screen and divide by the rows in order to get the pixel length to each row
-        i = self.pos[0] #get which row the Snake is in
-        j = self.pos[1] #get which column the Snake is in
+        #get the size the snake should be by finding how big each cube on the board is
+        dis = self.width// self.rows
+        #get the row and column the snake is at
+        i = self.position[0] 
+        j = self.position[1] 
 
-        pygame.draw.rect(surface, self.color, (i * dis + 1, j * dis + 1, dis - 2, dis - 2)) #draw a rectangle with the apporpriate math in order to put our Snake inside the boxes defined by our grid
-        if eyes:    #for the head of the Snake this will draw the eyes on it
-            centre = dis // 2
-            radius = 3
-            circleMiddle = (i * dis + centre - radius, j * dis + 8)
-            circleMiddle2 = (i * dis + dis - radius * 2, j * dis + 8)
-            pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
-            pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+        #draw a rectangle on the correct surface with the right color, size, and coordinates, plus some offset to place it correctly
+        pygame.draw.rect(surface, self.color, (i * dis + 1, j * dis + 1, dis - 2, dis - 2))
+        #if this is the head of the snake, draw eyes on it
+        if eyes:
+            center = dis // 2
+            radius = self.width // 160
+            if self.xDirec == 1:
+                circleMiddle = (i * dis + center - radius, j * dis + self.width // 65)
+                circleMiddle2 = (i * dis + dis - radius * 2, j * dis + self.width // 65)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+            if self.xDirec == -1:
+                circleMiddle = (i * dis + center + radius, j * dis + self.width // 65)
+                circleMiddle2 = (i * dis + dis - radius * 2 - self.width // 35, j * dis + self.width // 65)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+            if self.yDirec == 1:
+                circleMiddle = (i * dis + center + radius + self.width // 160, j * dis + self.width // 65)
+                circleMiddle2 = (i * dis + center + radius + self.width // 160, j * dis + dis - radius * 2)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+            if self.yDirec == -1:
+                circleMiddle = (i * dis + center - radius - self.width // 160, j * dis + self.width // 65)
+                circleMiddle2 = (i * dis + center - radius - self.width // 160, j * dis + dis - radius * 2)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle, radius)
+                pygame.draw.circle(surface, (0, 0, 0), circleMiddle2, radius)
+                
 
 
+#take all the cube objects of the snake and put them together
 class Snake(object):
-    body = []   #an array to hold all the Cubes that make up the Snakes body
-    turns = {}  #keep track of where and what direction our Snake has turned
+    #array to hold all cube objects of the snake
+    body = []
+    #keep track of where and which direction every turn is at for the tail of the snake to follow
+    turns = {}  
 
-    def __init__(self, color, pos):
-        self.color = color          #set color
-        self.head = Cube(pos)       #make Snakes head
-        self.body.append(self.head) #attach the head to the Snake
-        self.addCube()              #add 3 boxes to the Snake to start the game
+    #start the snake 4 cubes big facing right
+    def __init__(self, color, position):
+        self.color = color          
+        self.head = Cube(position)       
+        self.body.append(self.head)
+        self.addCube()              
         self.addCube()
         self.addCube()
-        self.dirnx = 0              #make the starting direction facing down
-        self.dirny = 1
+        self.xDirec = 0             
+        self.yDirec = 1
 
     def move(self):
         for event in pygame.event.get():
+            #quit the game when told to
             if event.type == pygame.QUIT:
-                pygame.quit()       #exits out of pygame
-                exit()              #always call exit() after pygame.quit() to keep away error about initializing video
+                pygame.quit()
+                #always call exit() when quitting to avoid an error
+                exit()              
 
-            keys = pygame.key.get_pressed()     #grab keys pressed, check if wasd or up down left or right has been pressed then turn the Snake accordingly
-
+            #if we don't quit the game lets see if any keys are pressed and act accordingly
+            keys = pygame.key.get_pressed()
             for key in keys:
-                if keys[pygame.K_LEFT]:
-                    self.dirnx = -1
-                    self.dirny = 0
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+                if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                    self.xDirec = -1
+                    self.yDirec = 0
+                    self.turns[self.head.position[:]] = [self.xDirec, self.yDirec]
+                elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                    self.xDirec = 1
+                    self.yDirec = 0
+                    self.turns[self.head.position[:]] = [self.xDirec, self.yDirec]
+                elif keys[pygame.K_UP] or keys[pygame.K_w]:
+                    self.xDirec = 0
+                    self.yDirec = -1
+                    self.turns[self.head.position[:]] = [self.xDirec, self.yDirec]
+                elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
+                    self.xDirec = 0
+                    self.yDirec = 1
+                    self.turns[self.head.position[:]] = [self.xDirec, self.yDirec]
 
-                elif keys[pygame.K_a]:
-                    self.dirnx = -1
-                    self.dirny = 0
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
-
-                elif keys[pygame.K_RIGHT]:
-                    self.dirnx = 1
-                    self.dirny = 0
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
-
-                elif keys[pygame.K_d]:
-                    self.dirnx = 1
-                    self.dirny = 0
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
-
-                elif keys[pygame.K_UP]:
-                    self.dirnx = 0
-                    self.dirny = -1
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
-
-                elif keys[pygame.K_w]:
-                    self.dirnx = 0
-                    self.dirny = -1
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
-
-                elif keys[pygame.K_DOWN]:
-                    self.dirnx = 0
-                    self.dirny = 1
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
-
-                elif keys[pygame.K_s]:
-                    self.dirnx = 0
-                    self.dirny = 1
-                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
-
-        for i, c in enumerate(self.body):       #for each box(c) in our Snakes body(self.body)
-            p = c.pos[:]                        #grab position of each Cube to see if it should be turned
-            if p in self.turns:                 #if the postion of the current Cube(c) is on a position in our list of places that the Snake has turned(self.turns) then we should turn the Snake accordingly
+        #move each cube in the snakes body and if we need to, move it
+        for i, cube in enumerate(self.body):       
+            p = cube.position[:]                      
+            if p in self.turns:
                 turn = self.turns[p]
-                c.move(turn[0], turn[1])
-                if i == len(self.body) - 1:     #if this is the last Cube in the Snakes body going around a turn then we no longer need to know to turn here so we delete the info of the turn from our turn list
+                cube.move(turn[0], turn[1])
+                #if a turn has reached the end of our snakes body, throw away the record of this turn
+                #otherwise the next time the snake gets here it will automatically turn and we dont want that
+                if i == len(self.body) - 1:
                     self.turns.pop(p)
-            else:                               #if our Snake is moving off screen we want it to move out the other side of the screen
-                if c.dirnx == -1 and c.pos[0] <= 0:
-                    c.pos = (c.rows - 1, c.pos[1])
-                elif c.dirnx == 1 and c.pos[0] >= c.rows - 1:
-                    c.pos = (0, c.pos[1])
-                elif c.dirny == 1 and c.pos[1] >= c.rows - 1:
-                    c.pos = (c.pos[0], 0)
-                elif c.dirny == -1 and c.pos[1] <= 0:
-                    c.pos = (c.pos[0], c.rows - 1)
+            else:
+                if cube.xDirec == -1 and cube.position[0] <= 0:
+                    cube.position = (cube.rows - 1, cube.position[1])
+                elif cube.xDirec == 1 and cube.position[0] >= cube.rows - 1:
+                    cube.position = (0, cube.position[1])
+                elif cube.yDirec == 1 and cube.position[1] >= cube.rows - 1:
+                    cube.position = (cube.position[0], 0)
+                elif cube.yDirec == -1 and cube.position[1] <= 0:
+                    cube.position = (cube.position[0], cube.rows - 1)
                 else:
-                    c.move(c.dirnx, c.dirny)
+                    cube.move(cube.xDirec, cube.yDirec)
 
-    def reset(self, pos):
-        self.head = Cube(pos)       #when our Snake dies we reset it, basically the same function as the one to start the Snake
+    #put the snake back and remove extra cubes when it dies
+    def reset(self, position):
+        self.head = Cube(position)
         self.body = []
         self.body.append(self.head)
         self.addCube()
         self.addCube()
         self.addCube()
         self.turns = {}
-        self.dirnx = 0
-        self.dirny = 1
+        self.xDirec = 0
+        self.yDirec = 1
 
+    #add a cube on to the tail of the snake and facing the correct direction
     def addCube(self):
-        tail = self.body[-1]            #find the last Cube on the Snake
-        dx, dy = tail.dirnx, tail.dirny #find the direction of the tail end of the Snake
-
-        if dx == 1 and dy == 0:         #depending on the direction of the tail, add a new Cube in the correct location
-            self.body.append(Cube((tail.pos[0] - 1, tail.pos[1])))
+        tail = self.body[-1]            
+        dx, dy = tail.xDirec, tail.yDirec
+        if dx == 1 and dy == 0:
+            self.body.append(Cube((tail.position[0] - 1, tail.position[1])))
         elif dx == -1 and dy == 0:
-            self.body.append(Cube((tail.pos[0] + 1, tail.pos[1])))
+            self.body.append(Cube((tail.position[0] + 1, tail.position[1])))
         elif dx == 0 and dy == 1:
-            self.body.append(Cube((tail.pos[0], tail.pos[1] - 1)))
+            self.body.append(Cube((tail.position[0], tail.position[1] - 1)))
         elif dx == 0 and dy == -1:
-            self.body.append(Cube((tail.pos[0], tail.pos[1] + 1)))
+            self.body.append(Cube((tail.position[0], tail.position[1] + 1)))
+        self.body[-1].xDirec = dx
+        self.body[-1].yDirec = dy
 
-        self.body[-1].dirnx = dx    #make sure the new Cube that was added is moving in the right direction
-        self.body[-1].dirny = dy
-
+    #draw all the cubes in the snake and if its the head give it eyes too
     def draw(self, surface):
-        for i, c in enumerate(self.body):   #for each Cube(c) in our Snakes body (self.body)
-            if i == 0:                      #if this is the head of the Snake(i==0) then we should draw the eyes on it
-                c.draw(surface, True)
+        for i, cube in enumerate(self.body):
+            if i == 0:
+                cube.draw(surface, True)
             else:
-                c.draw(surface)             #if its not the head of the Snake then just draw a normal Cube
+                cube.draw(surface)
+                
 
-
-def drawGrid(w, rows, surface):
-    sizeBtwn = w // rows    #take the width of the screen and divide it by the rows to get how much space should be between rows
-
+def drawGrid(width, rows, surface):
+    sizeBtwn = width// rows    
     x = 0
     y = 0
-    for l in range(rows):   #draw a horizontal and vertical line each iteration of the loop
+    #draw the white lines on the board
+    for l in range(rows):   
         x += sizeBtwn
         y += sizeBtwn
-
-        pygame.draw.line(surface, (255, 255, 255), (x, 0), (x, w))  #draw a line at the current x position from the top the the bottom of the screen
-        pygame.draw.line(surface, (255, 255, 255), (0, y), (w, y))  #draw a lind at the current y position from the left to the right of the screen
+        pygame.draw.line(surface, (255, 255, 255), (x, 0), (x, width))
+        pygame.draw.line(surface, (255, 255, 255), (0, y), (width, y))
 
 
 def redrawWindow(surface):
-    global rows, width, s, snack
+    global rows, width, snake, snack
     surface.fill((0, 0, 0))
-    s.draw(surface)                 #fill the back of the screen with black, then draw the Snake, snack, and grid, then update our display
+    snake.draw(surface)
     snack.draw(surface)
     drawGrid(width, rows, surface)
     pygame.display.update()
 
-
+#generate a random place for a snack
 def randomSnack(rows, item):
-    positions = item.body           #get the positions of the Snake to know where to not place snacks
-
-    while True:                     #get a random position of the snack, if it happens to land on the Snake then try a new random position
+    #grab all the positions of the body
+    positionitions = item.body
+    #keep finding random places to put a snack until we get one that isn't on top of the snake
+    while True:
         x = random.randrange(rows)
         y = random.randrange(rows)
-        if len(list(filter(lambda z: z.pos == (x, y), positions))) > 0:
+        if len(list(filter(lambda z: z.position == (x, y), positionitions))) > 0:
             continue
         else:
             break
-
     return (x, y)
 
 
-def messageBox(subject, content):
-    root = tk.Tk()
-    root.attributes("-topmost", True)
-    root.withdraw()                         #fancy things to make the message box look nice
-    messagebox.showinfo(subject, content)
-    try:
-        root.destroy()
-    except:
-        pass
+def messageBox(score):
+    mainWindow = tkinter.Tk()
+    mainWindow.title("You Lost!")
+    mainWindow.geometry("300x180")
+    scoreFrame = tkinter.Frame(mainWindow)
+    scoreFrame.pack()
+    buttonFrame = tkinter.Frame(mainWindow)
+    buttonFrame.pack(fill='both')
 
+    scoreLabel = tkinter.Label(scoreFrame, text = 'Score: ' + str(score),  anchor="w")
+    scoreLabel['font'] = font.Font(size = 30)
+    scoreLabel.pack()
+
+    replayButton = tkinter.Button(buttonFrame, text='Play Again!', command=mainWindow.destroy)
+    replayButton['font'] = font.Font(size = 30)
+    replayButton.pack()
+
+    scoreFrame.pack()
+    buttonFrame.pack()
+    tkinter.mainloop()
 
 def main():
-    global width, rows, s, snack
-    width = 500
-    rows = 20
-    win = pygame.display.set_mode((width, width))           #set pixel width and height of play area
-    s = Snake((255, 0, 0), (10, 10))                        #create the Snake
-    snack = Cube(randomSnack(rows, s), color=(255, 0, 0))   #make our first snack
-    flag = True                                             #create a statement for our main loop to follow
+    global width, rows, snake, snack
+    width = BOARDSIZE
+    rows = ROWS
+    win = pygame.display.set_mode((width, width))           
+    snake = Snake((255, 0, 0), (10, 10))                        
+    snack = Cube(randomSnack(rows, snake), color=(255, 0, 0))   
+    flag = True                                             
 
-    clock = pygame.time.Clock()                             #keep track of time so the Snake moves consistent speeds
+    #keep time so the snake moves at a consistent rate
+    clock = pygame.time.Clock()                             
 
-    while flag:                                             #main game loop
-        pygame.time.delay(50)                               #delay .5s inbetween Snake moves
-        clock.tick(10)                                      #stop the game from moving at more than 10 fps, game will go faster when this is lower
-        s.move()                                            #move the Snake
-        if s.body[0].pos == snack.pos:                      #if the Snake moves over a snack, eat it and add a body part
-            s.addCube()
-            snack = Cube(randomSnack(rows, s), color=(255, 0, 0))
+    while flag:
+        #0.5 second delay between moves
+        pygame.time.delay(50)
+        #stop the game from going more than 10 fps
+        clock.tick(10)                                      
+        snake.move()                                           
+        if snake.body[0].position == snack.position:                      
+            snake.addCube()
+            snack = Cube(randomSnack(rows, snake), color=(255, 0, 0))
 
-        for x in range(len(s.body)):                        #check to see if the Snake has hit itself and give the score and message box
-            if s.body[x].pos in list(map(lambda z: z.pos, s.body[x + 1:])):
-                print('Score: ', len(s.body))
-                messageBox('You Lost!', 'Play again...')
-                s.reset((10, 10))
+        for x in range(len(snake.body)):                        
+            if snake.body[x].position in list(map(lambda z: z.position, snake.body[x + 1:])):
+                print('Score: ', len(snake.body))
+                messageBox(len(snake.body))
+                snake.reset((10, 10))
                 break
 
-        redrawWindow(win)                                   #update the window each time the Snake moves
-
-    pass
+        redrawWindow(win)                                   
 
 
 main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

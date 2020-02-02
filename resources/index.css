@@ -1,5 +1,4 @@
 /*colors in our pallette
-FBFBF2
 e5e6e4
 C9C5CB
 BAACBD
@@ -128,6 +127,26 @@ nav h1{
   width:100%;
   display: inline;
 }
+
+.download h5{
+  border: #847577 solid .2em;
+  border-radius: 1em;
+  background: #DCC9B6;
+  padding: .5em;
+  margin: .5em;
+  position: relative;         /*for transitioning icons up*/
+  top:0;                      /*first position when idle*/
+  transition: all ease 0.5s;  /*tells all new properties to transition with ease over 0.5s*/
+  color: black;
+  text-decoration: none;
+}
+
+.download h5:hover{
+  text-decoration: none;
+  top: -4px;
+  color: black;
+}
+
 
 #resume{
   padding-top:5em;
