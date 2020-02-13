@@ -187,34 +187,31 @@ nav h1{
  color: #847577;
 }
 
-
-
-
-
-
-
-
-
 /*
 essential styles:
 these make the slideshow work
 */
 
-#slides {
+/*#slides {
     top: 11em;
     position: relative;
-    height: 30em;
+    text-align: center;
+    height: 20em;
     padding: 0px;
     margin: 0px;
     list-style-type: none;
+}*/
+#slides {
+  text-align: center;
+  width: 80%;
+  margin: 40em auto;
 }
 
 .slide {
-    position: absolute;
     left: 0px;
     top: 0px;
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: 50%;
     opacity: 0;
     z-index: 1;
 
