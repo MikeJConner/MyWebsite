@@ -202,35 +202,44 @@ these make the slideshow work
     list-style-type: none;
 }*/
 #slides {
+  position: relative;
+  list-style-type: none;
+  padding-top: 30em;
   text-align: center;
   width: 80%;
-  margin: 40em auto;
+  margin: auto;
+  overflow: hidden;
 }
 
 .slide {
+    position: absolute;
     left: 0px;
-    top: 0px;
-    width: 50%;
-    height: 50%;
+    top: 1em;
+    width: 100%;
+    height: 100%;
     opacity: 0;
-    z-index: 1;
+    z-index: 109;
 
     overflow: hidden;
     transform: translate(-100%, 0);
-    transition: transform ease 1s;
+    transition: all ease 1s;
 }
 
 .showing {
     opacity: 1;
-    z-index: 2;
+    z-index: 223;
     overflow: hidden;
     transform: translate(0, 0);
 }
 
 .leaving {
-  opacity: 1;
-  z-index: 2;
+  opacity: 0;
+  z-index: 1;
   transform: translate(100%, 0);
+}
+
+.reset {
+  transform: translate(-100%, 0);
 }
 /*
 non-essential styles:
