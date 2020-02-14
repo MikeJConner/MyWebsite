@@ -205,6 +205,7 @@ these make the slideshow work
   position: relative;
   list-style-type: none;
   padding-top: 30em;
+  margin-top: 10em;
   text-align: center;
   width: 80%;
   margin: auto;
